@@ -1,0 +1,7 @@
+{
+  "seed": 5434,
+  "val_ratio": 0.1,
+  "n_train_fold": 6916181,
+  "n_val_fold": 768464,
+  "train_fold_mean_rating": 3.84185723305969
+}

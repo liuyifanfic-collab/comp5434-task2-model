@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+data/
+artifacts/
+submissions/
+features/
+tests/_synthetic/
