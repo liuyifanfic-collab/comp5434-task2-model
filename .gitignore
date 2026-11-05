@@ -1,7 +1,12 @@
 __pycache__/
 *.pyc
 data/
-artifacts/
 submissions/
 features/
 tests/_synthetic/
+# ship the FINAL neural artifacts for bit-exact reproduction; ignore the rest
+artifacts/*
+!artifacts/neural_model.pt
+!artifacts/neural_vocab.json
+!artifacts/neural_meta.json
+!artifacts/neural_final_run.json

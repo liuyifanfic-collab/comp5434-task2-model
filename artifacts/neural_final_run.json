@@ -1,0 +1,16 @@
+{
+  "run": "final-full-data-neural (Plan A, local)",
+  "train_rows": 6916181,
+  "val_rows": 768464,
+  "vocab_size": 100001,
+  "dense_features": 19,
+  "epochs_run": 9,
+  "load_merge_s": 52.7,
+  "vocab_s": 74.0,
+  "encode_s": 92.1,
+  "dense_prep_s": 29.6,
+  "train_s": 1552.0,
+  "epoch_avg_s": 169.83,
+  "offline_total_s": 1800.4,
+  "val_rmse": 1.170514223640399
+}

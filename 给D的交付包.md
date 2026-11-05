@@ -4,20 +4,24 @@
 
 `report_B_task2_model.md`（英文终稿）。3.x 模型设计 / 4.x 实现 / 5.x 结果与消融，[TBD] 已全部回填（效率表）。数字与 `experiments.md` 台账一致，直接统稿插入。
 
-## 2. 代码复现指南（对应你的 I-2）
+## 2. 代码复现指南（2026-11-05 加固：单线程 + 钉版本 + artifacts 入库）
 
-- 位置：`project/task2_model/`，依赖见 `requirements.txt`（另需 `pyarrow`、CPU 版 `torch`）
-- 数据前置：`data/train.csv`、`data/test.csv`（Kaggle）+ `features/`（C 交付）+ `split/`（已冻结，**勿重跑 make_split**）
-- 复现命令（按序）：
+- 依赖：`pip install -r requirements.txt`（版本已钉死：numpy 2.3.5 / pandas 3.0.2 / pyarrow 26.0.0 / torch 2.11.0）
+- 数据前置：`data/`（Kaggle）+ `features/`（C 交付）+ `split/`（仓库已含，勿重算）
+
+**复现两条路径**：
 
 ```bash
 cd project/task2_model
-python -m tests.smoke_test        # 环境自检，无需数据
-python -m src.train_final_neural  # 全量训练 ~24 分钟
-python -m src.predict_neural      # 生成提交文件，应与 Kaggle v6 (0.77300) 一致
+# a) 逐位复现提交文件（推荐，仓库已带最终模型 artifacts）：
+python -m src.predict_neural        # 输出与 Kaggle v7 提交文件逐字节一致
+
+# b) 全流程重训（单线程 ~30 分钟，同环境结果一致）：
+python -m src.train_final_neural
+python -m src.predict_neural
 ```
 
-- 复现性：seed 5434、确定性词表；预测与 v6 一致
+- 背景：多线程 CPU 浮点求和顺序非确定性导致跨机器 ±0.002 分差（你 11-05 复现时已观察到），已通过钉单线程消除
 - 跑不通找 B
 
 ## 3. Slides 模型侧素材（建议 1-2 页）

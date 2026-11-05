@@ -26,6 +26,7 @@ from src.train_neural import encode
 
 
 def main() -> None:
+    torch.set_num_threads(1)       # deterministic forward pass
     model_file = config.ARTIFACT_DIR / "neural_model.pt"
     vocab_file = config.ARTIFACT_DIR / "neural_vocab.json"
     meta_file = config.ARTIFACT_DIR / "neural_meta.json"

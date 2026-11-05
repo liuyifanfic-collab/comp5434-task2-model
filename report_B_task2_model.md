@@ -46,15 +46,23 @@ A tuning sweep fixed the capacity: doubling width/depth or doubling the learning
 - **Leakage discipline**: TF-IDF / scaler fitted on training rows only; statistics are leave-one-out over the train fold (§5.x.4).
 - **Efficiency instrumentation**: per-epoch times inside the training loop; offline and inference timings at pipeline entry points.
 
-Final full-data run (Plan A: Spark feature generation → local training):
+Final full-data run (Plan A: Spark feature generation → local training,
+single-thread pinned for cross-machine bit-level reproducibility):
 
 | Metric | Value |
 |---|---|
 | Training rows / validation rows | 6 916 181 / 768 464 |
-| Offline total (load 55.6 + vocab 71.0 + encode 89.5 + dense 29.2 + train 1197.3 s) | **1442.5 s** |
-| Training time per epoch (9 epochs) | **131.3 s avg** |
-| Inference, all 10 000 test records | **0.02 s** |
+| Training time per epoch (9 epochs, 1 thread) | **169.8 s avg** |
+| Offline total (load + vocab + encode + dense + train) | **1800.4 s** |
+| Inference, all 10 000 test records | **0.03 s** |
 | Hardware | CPU-only (single machine); feature generation on Spark, see data-side chapter |
+
+Reproducibility hardening: multi-threaded CPU reductions are not
+deterministic across machines (float summation order varies), which we
+observed as a 0.002 LB difference on an independent re-run. The final
+pipeline pins execution to a single thread and pins library versions;
+two prediction runs are then byte-identical, and the trained weights are
+shipped with the code so the submission file is exactly regenerable.
 
 ## 5.x Performance evaluation and discussion
 
@@ -66,7 +74,7 @@ Final full-data run (Plan A: Spark feature generation → local training):
 | Structured only, closed-form ridge | 19 dense | 1.4682 | — |
 | Linear ridge (stage 1, tuned) | TF-IDF + 19 | 1.4033 | 1.20087 (v4) |
 | Neural (stage 2, pilot) | emb + 19 | 1.1914 | 0.79 (v5) |
-| **Neural (stage 2, full data)** | emb + 19 | **1.1706** | **0.77300 (v6)** |
+| **Neural (stage 2, full data, deterministic)** | emb + 19 | **1.1705** | **0.773 (v6 0.77300; v7 = deterministic re-run, final)** |
 
 Public-leaderboard trajectory: 1.30841 (v1, text-only linear) → 1.23869 → 1.20087 → 0.79 → 0.77300.
 

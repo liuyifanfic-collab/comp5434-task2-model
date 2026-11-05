@@ -26,6 +26,15 @@ PATIENCE = 3
 
 
 def main() -> None:
+    # Bit-reproducibility: multi-threaded CPU reductions are NOT
+    # deterministic across machines (float summation order varies with
+    # thread count/scheduling). Pinning to one thread makes the training
+    # trajectory identical on any machine with the pinned library versions.
+    torch.set_num_threads(1)
+    try:
+        torch.set_num_interop_threads(1)
+    except RuntimeError:
+        pass                       # already initialised -- harmless here
     t0 = time.perf_counter()
     df = load_reviews(config.TRAIN_CSV, is_train=True)
     feats = load_features(config.TRAIN_FEATURES)

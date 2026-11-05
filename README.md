@@ -7,8 +7,9 @@
 
 - [x] 两阶段模型全部完成：自实现线性 Ridge（TF-IDF + 19 列特征融合）→ 自实现神经模型（EmbeddingBag + MLP，最终方案）
 - [x] 全部实验完成：消融、调参 sweep、bigram 负结果、结构捷径排查（见 `experiments.md`）
-- [x] **最终成绩：Kaggle 公榜 0.77300（v6，全量神经模型）**，val RMSE 1.1706
-- [x] 效率指标：131.3 s/epoch、离线 1442.5 s、推理 0.02 s（`artifacts/neural_final_run.json`）
+- [x] **最终成绩：Kaggle 公榜 0.773 档（v6 0.77300 / v7 确定性版）**，val RMSE 1.1705
+- [x] 效率指标（单线程确定性版）：169.8 s/epoch、离线 1800.4 s、推理 0.03 s（`artifacts/neural_final_run.json`）
+- [x] 可复现性加固：单线程钉死 + 版本钉死 + 最终 artifacts 入库，`predict_neural` 逐字节复现提交文件
 - [x] 报告章节终稿（`report_B_task2_model.md`）、给 C 反馈（已发）、给 D 交付包（`给D的交付包.md`）
 - [x] 合规：零黑盒（PyTorch 仅作张量引擎，训练循环手写）
 
